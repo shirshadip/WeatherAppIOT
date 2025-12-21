@@ -4,6 +4,8 @@
 
 A local IoT project that reads temperature and humidity from a DHT11 connected to an Arduino UNO R4, sends readings over USB serial to a Python Flask server, and displays live values on a local web dashboard.
 
+## Full project Documentation
+<a href="https://weatherappiotdocumentation.netlify.app/" target="_blank">Documentation website</a>
 ## Quick Highlights
 
 - Real-time sensor readings (DHT11)
