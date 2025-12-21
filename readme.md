@@ -32,6 +32,10 @@ A local IoT project that reads temperature and humidity from a DHT11 connected t
 | VCC   | 5V      |
 | DATA  | D2      |
 | GND   | GND     |
+
+## schematic diagram
+
+
 ![Schematic Diagram](projecDoc\diagram.png)
 
 ## Software Dependencies
