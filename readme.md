@@ -36,7 +36,7 @@ A local IoT project that reads temperature and humidity from a DHT11 connected t
 ## schematic diagram
 
 
-![Schematic Diagram](projectDoc\diagram.png)
+<img width="1920" height="1020" alt="image" src="projectDocs/diagram.png" />
 
 ## Software Dependencies
 
