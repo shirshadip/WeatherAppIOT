@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IoT Weather Dashboard</title>
+    <style>
+        body {
+            background: #111;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+        }
+        .card {
+            display: inline-block;
+            background: #222;
+            padding: 30px;
+            margin: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌦 IoT Weather Station</h1>
+
+    <div class="card">
+        <h2>Temperature</h2>
+        <h1 id="temp">-- °C</h1>
+    </div>
+
+    <div class="card">
+        <h2>Humidity</h2>
+        <h1 id="hum">-- %</h1>
+    </div>
+
+    <script>
+        setInterval(() => {
+            fetch("/data")
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("temp").innerText =
+                        data.temperature + " °C";
+                    document.getElementById("hum").innerText =
+                        data.humidity + " %";
+                });
+        }, 2000);
+    </script>
+
+</body>
+</html>
