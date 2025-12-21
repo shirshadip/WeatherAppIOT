@@ -36,7 +36,12 @@ A local IoT project that reads temperature and humidity from a DHT11 connected t
 ## schematic diagram
 
 
-![Schematic Diagram](projectDoc\diagram.png)
+
+![System Diagram](projectDoc/diagram.png)
+
+This diagram shows the connection between the DHT11 sensor, Arduino UNO R4,
+and the Python Flask web application.
+
 
 ## Software Dependencies
 

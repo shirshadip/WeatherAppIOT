@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IoT Weather Monitoring System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #0f172a;
+            color: #e5e7eb;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .copy-btn {
+    background: #38bdf8;
+    color: #020617;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85em;
+    float: right;
+    margin-bottom: 5px;
+}
+
+.copy-btn:hover {
+    background: #0ea5e9;
+}
+
+
+        h1, h2, h3 {
+            color: #38bdf8;
+        }
+
+        h1 {
+            border-bottom: 2px solid #38bdf8;
+            padding-bottom: 8px;
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        code, pre {
+            background: #020617;
+            color: #22c55e;
+            padding: 8px;
+            border-radius: 6px;
+            display: block;
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #334155;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #020617;
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+            border: 1px solid #334155;
+        }
+
+        .note {
+            background: #020617;
+            padding: 12px;
+            border-left: 4px solid #22c55e;
+            margin-top: 10px;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding-top: 10px;
+            border-top: 1px solid #334155;
+            font-size: 0.9em;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🌦 IoT Weather Monitoring System (Local — No External API)</h1>
+
+<section>
+    <p>
+        A local IoT project that reads temperature and humidity from a <strong>DHT11</strong>
+        connected to an <strong>Arduino UNO R4</strong>, sends readings over USB serial
+        to a <strong>Python Flask</strong> server, and displays live values on a local web dashboard.
+    </p>
+</section>
+
+<section>
+    <h2>Quick Highlights</h2>
+    <ul>
+        <li>Real-time sensor readings (DHT11)</li>
+        <li>No external APIs or cloud required</li>
+        <li>Python (Flask) backend + simple web UI</li>
+        <li>Serial communication via USB (pyserial)</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Features</h2>
+    <ul>
+        <li>Live temperature & humidity display (auto-refresh)</li>
+        <li>Simple HTML dashboard (<code>templates/index.html</code>)</li>
+        <li>Stable serial handling for single-client COM access</li>
+        <li>Easy to extend: CSV logging, charts (Chart.js), Wi-Fi ESP porting</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Hardware</h2>
+    <ul>
+        <li>Arduino UNO R4</li>
+        <li>DHT11 sensor (or DHT11 module)</li>
+        <li>USB cable, jumper wires</li>
+        <li>(If bare DHT11) 10 kΩ pull-up resistor between VCC and DATA</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Sensor Wiring (DHT11 → Arduino UNO R4)</h2>
+    <table>
+        <tr>
+            <th>DHT11</th>
+            <th>Arduino</th>
+        </tr>
+        <tr>
+            <td>VCC</td>
+            <td>5V</td>
+        </tr>
+        <tr>
+            <td>DATA</td>
+            <td>D2</td>
+        </tr>
+        <tr>
+            <td>GND</td>
+            <td>GND</td>
+        </tr>
+    </table>
+</section>
+
+<section>
+    <h2>Schematic Diagram</h2>
+    <img src="projectDoc/diagram.png" alt="System Diagram">
+    <p>
+        This diagram shows the connection between the DHT11 sensor,
+        Arduino UNO R4, and the Python Flask web application.
+    </p>
+</section>
+
+<section>
+    <h2>Software Dependencies</h2>
+    <ul>
+        <li>Windows (development target)</li>
+        <li>Python 3.8+</li>
+        <li>Arduino IDE (to upload sketch)</li>
+        <li>Python packages: Flask, pyserial</li>
+    </ul>
+
+    <h3>Install Dependencies</h3>
+
+<button class="copy-btn" onclick="copyCommand('cmd-install')">Copy</button>
+<pre><code id="cmd-install">pip install flask pyserial</code></pre>
+
+</section>
+
+<section>
+    <h2>Expected Arduino Serial Output</h2>
+    <p>One line per reading (human-readable). Example:</p>
+    <pre><code>Temperature: 28 °C | Humidity: 65 %</code></pre>
+    <p>(The backend parses this string to extract values.)</p>
+</section>
+
+<section>
+    <h2>Project Layout</h2>
+    <pre><code>
+WEATHERAPPIOT/
+├── app.py
+├── templates/
+│   └── index.html
+└── DHT/
+    └── DHT.ino
+    </code></pre>
+</section>
+
+<section>
+    <h2>Run (Minimal)</h2>
+    <ol>
+        <li>Upload <code>DHT/DHT.ino</code> to Arduino UNO R4.</li>
+        <li>Close Arduino Serial Monitor.</li>
+        <li>Connect Arduino via USB.</li>
+        <li>From project folder run:</li>
+    </ol>
+
+    <h3>Run the Server</h3>
+
+<button class="copy-btn" onclick="copyCommand('cmd-run')">Copy</button>
+<pre><code id="cmd-run">python app.py</code></pre>
+
+
+    <p>Open:</p>
+    <button class="copy-btn" onclick="copyCommand('url')">Copy</button>
+    <pre><code id="url">http://127.0.0.1:5000</code></pre>
+
+    <h3>Disable Flask Auto-Reloader</h3>
+
+<button class="copy-btn" onclick="copyCommand('cmd-reloader')">Copy</button>
+<pre><code id="cmd-reloader">app.run(use_reloader=False)</code></pre>
+
+</section>
+
+<section>
+    <h2>Troubleshooting</h2>
+    <ul>
+        <li>COM access denied: close Arduino IDE / Serial Monitor and retry.</li>
+        <li>Wrong data format: confirm Arduino prints the exact format.</li>
+        <li>High latency: confirm baud rate and avoid blocking serial reads.</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Improvements / Roadmap</h2>
+    <ul>
+        <li>Persistent logging to CSV or database</li>
+        <li>Real-time charts (Chart.js)</li>
+        <li>Alert system (threshold-based)</li>
+        <li>Mobile-friendly UI</li>
+        <li>Wi-Fi version with ESP8266/ESP32</li>
+    </ul>
+</section>
+
+<footer>
+    <p>
+        Open-source for learning and educational use.<br>
+        <strong>Author:</strong> Shirshadip — IoT | Python | Computer Science Enthusiast
+    </p>
+</footer>
+<script>
+function copyCommand(id) {
+    const text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        alert("Command copied!");
+    });
+}
+</script>
+
+</body>
+</html>
