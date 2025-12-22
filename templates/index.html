@@ -1,30 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>IoT Weather Dashboard</title>
+
     <style>
         body {
             background: #111;
             color: white;
-            font-family: Arial;
+            font-family: Arial, sans-serif;
             text-align: center;
         }
+
         .card {
             display: inline-block;
             background: #222;
             padding: 30px;
             margin: 20px;
             border-radius: 10px;
+            min-width: 220px;
+        }
+
+        h1, h2 {
+            margin: 10px 0;
         }
     </style>
 </head>
+
 <body>
 
     <h1>🌦 IoT Weather Application</h1>
 
     <div class="card">
-        <h2>Temperature</h2>
+        <h2>Temperature (°C)</h2>
         <h1 id="temp">-- °C</h1>
+    </div>
+
+    <div class="card">
+        <h2>Temperature (°F)</h2>
+        <h1 id="tempF">-- °F</h1>
     </div>
 
     <div class="card">
@@ -33,17 +47,43 @@
     </div>
 
     <script>
-        setInterval(() => {
-            fetch("/data")
-                .then(res => res.json())
-                .then(data => {
-                    document.getElementById("temp").innerText =
-                        data.temperature + " °C";
-                    document.getElementById("hum").innerText =
-                        data.humidity + " %";
-                });
-        }, 2000);
-    </script>
+function fetchData() {
+    fetch("/data")
+        .then(response => response.json())
+        .then(data => {
+
+            // 🔹 Convert string → number safely
+            const c = parseFloat(data.temperature);
+            const h = parseFloat(data.humidity);
+
+            // 🔹 Check if data is valid
+            if (isNaN(c) || isNaN(h)) {
+                console.warn("Waiting for sensor data...");
+                return;
+            }
+
+            const f = (c * 9 / 5) + 32;
+
+            document.getElementById("temp").innerText =
+                c.toFixed(2) + " °C";
+
+            document.getElementById("tempF").innerText =
+                f.toFixed(2) + " °F";
+
+            document.getElementById("hum").innerText =
+                h.toFixed(2) + " %";
+        })
+        .catch(error => {
+            console.error("Fetch error:", error);
+        });
+}
+
+// initial fetch
+fetchData();
+
+// update every 2 seconds
+setInterval(fetchData, 2000);
+</script>
 
 </body>
 </html>

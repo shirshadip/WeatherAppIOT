@@ -12,19 +12,23 @@ void setup() {
 
 void loop() {
   float humidity = dht.readHumidity();
-  float temperature = dht.readTemperature(); // Celsius
+  float temperatureC = dht.readTemperature();   // Celsius
+  float temperatureF = dht.readTemperature(true); // Fahrenheit
 
-  if (isnan(humidity) || isnan(temperature)) {
+  if (isnan(humidity) || isnan(temperatureC) || isnan(temperatureF)) {
     Serial.println("Sensor error");
+    delay(2000);
     return;
   }
 
-  Serial.print("Temperature: ");
-  Serial.print(temperature);
-  Serial.print(" °C | Humidity: ");
+  // 🔹 CONSISTENT FORMAT (important for Flask parsing)
+  Serial.print("TemperatureC:");
+  Serial.print(temperatureC);
+  Serial.print(" | TemperatureF:");
+  Serial.print(temperatureF);
+  Serial.print(" | Humidity:");
   Serial.print(humidity);
-  Serial.println(" %");
-
+  Serial.println("%");
 
   delay(2000);
 }
