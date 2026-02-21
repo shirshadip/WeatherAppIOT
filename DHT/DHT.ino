@@ -8,12 +8,13 @@ DHT dht(DHTPIN, DHTTYPE);
 void setup() {
   Serial.begin(9600);
   dht.begin();
+  Serial.println("DHT11 sensor initialized");
 }
 
 void loop() {
   float humidity = dht.readHumidity();
-  float temperatureC = dht.readTemperature();   // Celsius
-  float temperatureF = dht.readTemperature(true); // Fahrenheit
+  float temperatureC = dht.readTemperature();
+  float temperatureF = dht.readTemperature(true);
 
   if (isnan(humidity) || isnan(temperatureC) || isnan(temperatureF)) {
     Serial.println("Sensor error");
@@ -21,13 +22,12 @@ void loop() {
     return;
   }
 
-  // 🔹 CONSISTENT FORMAT (important for Flask parsing)
   Serial.print("TemperatureC:");
-  Serial.print(temperatureC);
+  Serial.print(temperatureC, 1);
   Serial.print(" | TemperatureF:");
-  Serial.print(temperatureF);
+  Serial.print(temperatureF, 1);
   Serial.print(" | Humidity:");
-  Serial.print(humidity);
+  Serial.print(humidity, 1);
   Serial.println("%");
 
   delay(2000);

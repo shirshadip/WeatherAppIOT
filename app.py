@@ -13,25 +13,46 @@ latest_data = {
 
 def connect_arduino():
     global arduino
-    arduino = serial.Serial('COM3', 9600, timeout=1)
-    time.sleep(2)
+    try:
+        arduino = serial.Serial('COM3', 9600, timeout=1)
+        time.sleep(2)
+        print("Arduino connected")
+    except serial.SerialException as e:
+        print("Arduino connection failed:", e)
+        arduino = None
 
 def read_arduino():
-    global latest_data
+    global latest_data, arduino
+
     while True:
         try:
-            if arduino and arduino.in_waiting:
-                line = arduino.readline().decode().strip()
+            if not arduino:
+                time.sleep(1)
+                continue
 
-                if "Temperature" in line:
-                    parts = line.split("|")
-                    temp = parts[0].split(":")[1].replace("°C", "").strip()
-                    hum = parts[1].split(":")[1].replace("%", "").strip()
+            line = arduino.readline().decode(errors="ignore").strip()
+            if not line:
+                continue
 
-                    latest_data["temperature"] = temp
-                    latest_data["humidity"] = hum
-        except:
-            pass
+            print("RAW:", line)
+
+            for part in line.split("|"):
+                part = part.strip()
+
+                if part.startswith("TemperatureC"):
+                    latest_data["temperature"] = part.split(":")[1].strip()
+
+                elif part.startswith("Humidity"):
+                    latest_data["humidity"] = part.split(":")[1].replace("%", "").strip()
+
+        except serial.SerialException as e:
+            print("Serial error:", e)
+            arduino = None
+
+        except Exception as e:
+            print("Parse error:", e)
+
+
 
 
 @app.route("/")
@@ -42,6 +63,11 @@ def index():
 @app.route("/data")
 def data():
     return jsonify(latest_data)
+@app.after_request
+def add_header(response):
+    response.headers["Cache-Control"] = "no-store"
+    return response
+
 
 
 if __name__ == "__main__":
